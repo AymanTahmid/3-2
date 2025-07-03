@@ -1,0 +1,77 @@
+.form-text {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-top: 0.5rem;
+}
+.form-text i {
+  color: #0891b2;
+}
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  .card {
+    margin: 1rem 0;
+  }
+  .login-form-section {
+    padding: 2rem !important;
+  }
+}
+.signup-toast-container {
+  z-index: 1080;
+  min-width: 320px;
+  max-width: 90vw;
+}
+.signup-toast-body {
+  font-size: 0.95rem;
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+.signup-toast-timestamp {
+  font-size: 0.8rem;
+  margin-top: 2px;
+}
+.signup-main-card {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.signup-left-logo {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border: 4px solid rgba(255,255,255,0.3);
+}
+.signup-left-title {
+  font-size: 1.5rem;
+  letter-spacing: -0.025em;
+}
+.signup-left-content {
+  max-width: 300px;
+}
+.signup-right-logo {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}
+.signup-right-title {
+  color: #2c5364;
+  font-size: 1.8rem;
+  letter-spacing: -0.025em;
+}
+.signup-form-input {
+  border: 2px solid #e3f2fd;
+  background: rgba(255,255,255,0.9);
+  padding: 16px 20px;
+}
+.signup-btn {
+  border: 2px solid #2c5364;
+  color: #2c5364;
+}
+.signup-help-text {
+  font-size: 0.9rem;
+}
+.signup-link-container {
+  position: relative;
+  z-index: 1;
+}

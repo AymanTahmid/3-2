@@ -1,0 +1,24 @@
+.custom-input {
+    font-size: 20px;
+    height: 40px;
+    width: 100%;
+    border-radius: 5px;
+    background-color: #f7f7f7;
+    margin-bottom: 0.5rem;
+    @apply placeholder-opacity-50;
+}
+.custom-input:focus,
+.custom-input:hover {
+    background-color: #fcfcfc;
+}
+.custom-submit {
+    font-size: 25px;
+    border-radius: 8px;
+    background-color: #94d6e3;
+    width: 230px;
+    transition: background 0.2s;
+}
+.custom-submit:hover {
+    background-color: #2d8ea1;
+    color: #fff;
+}

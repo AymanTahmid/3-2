@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cardiac Information - CardioInsight</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='Images/favicon.png') }}"
+    />
+    <!-- Bootstrap 5 -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <!-- Custom CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='CSS/home.css') }}"
+    />
+  </head>
+  <body>
+    <!-- Floating Particles Background -->
+    <div class="floating-particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light navbar-ocean fade-in">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="{{ url_for('home') }}">
+          <span class="navbar-logo-wrapper">
+            <img
+              src="{{ url_for('static', filename='Images/heartLogo.jpg') }}"
+              alt="Logo"
+              class="navbar-logo"
+            />
+          </span>
+          <span class="ms-2 fw-bold text-gradient navbar-brand-text">CardioInsight</span>
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'home' %}active{% endif %}"
+                href="{{ url_for('home') }}"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'find' %}active{% endif %}"
+                href="{{ url_for('find') }}"
+                >Predict</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'cardiac_info' %}active{% endif %}"
+                href="{{ url_for('cardiac_info') }}"
+                >Cardiac Info</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'statistics' %}active{% endif %}"
+                href="{{ url_for('statistics') }}"
+                >Statistics</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'prevention' %}active{% endif %}"
+                href="{{ url_for('prevention') }}"
+                >Prevention</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'profile' %}active{% endif %}"
+                href="{{ url_for('profile') }}"
+                >Profile</a
+              >
+            </li>
+            {% if session.get('username') %}
+            <li class="nav-item">
+              <form
+                action="{{ url_for('logout') }}"
+                method="post"
+                class="logout-form"
+              >
+                <button class="nav-link btn btn-link logout-btn" type="submit">
+                  Logout
+                </button>
+              </form>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-section-wrapper fade-in">
+      <div class="hero-section">
+        <div class="container text-center">
+          <h1 class="display-4 fw-bold mb-4">
+            <i class="bi bi-heart-pulse me-3"></i>Comprehensive Cardiac Information
+          </h1>
+          <p class="lead mb-4">
+            Understanding your heart health is the first step to a healthier life. 
+            Explore comprehensive cardiac information, symptoms, and expert guidance.
+          </p>
+          <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="#heart-basics" class="btn btn-outline-success btn-lg">
+              <i class="bi bi-book me-2"></i>Learn Basics
+            </a>
+            <a href="#symptoms" class="btn btn-assessment btn-lg">
+              <i class="bi bi-exclamation-triangle me-2"></i>Know Symptoms
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Heart Basics Section -->
+    <div class="container mt-5 fade-in" id="heart-basics">
+      <div class="text-center mb-5">
+        <h2 class="section-title">
+          <i class="bi bi-heart me-3"></i>Understanding Your Heart
+        </h2>
+        <p class="lead text-muted">
+          Your heart is an incredible muscle that beats about 100,000 times per day, 
+          pumping life-sustaining blood throughout your body.
+        </p>
+      </div>
+
+      <div class="row g-4 mb-5">
+        <div class="col-lg-4 col-md-6">
+          <div class="card info-card interactive-card h-100">
+            <div class="card-body d-flex flex-column">
+              <div class="text-center mb-3">
+                <i class="bi bi-heart-pulse cardiac-large-icon icon-danger"></i>
+              </div>
+              <h5 class="card-title text-gradient fw-bold mb-3 text-center">Heart Anatomy</h5>
+              <div class="flex-grow-1 text-start">
+                <div class="mb-2">❤️ <strong>Four Chambers:</strong> Two atria and two ventricles</div>
+                <div class="mb-2">🩸 <strong>Valves:</strong> Mitral, tricuspid, aortic, and pulmonary</div>
+                <div class="mb-2">💨 <strong>Arteries:</strong> Carry oxygen-rich blood away from heart</div>
+                <div class="mb-0">🔄 <strong>Veins:</strong> Return oxygen-poor blood to heart</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+          <div class="card info-card interactive-card h-100">
+            <div class="card-body d-flex flex-column">
+              <div class="text-center mb-3">
+                <i class="bi bi-activity cardiac-large-icon icon-success"></i>
+              </div>
+              <h5 class="card-title text-gradient fw-bold mb-3 text-center">How It Works</h5>
+              <div class="flex-grow-1 text-start">
+                <div class="mb-2">🔄 <strong>Circulation:</strong> Continuous blood flow cycle</div>
+                <div class="mb-2">💓 <strong>Heartbeat:</strong> Electrical signals coordinate contractions</div>
+                <div class="mb-2">🫁 <strong>Oxygenation:</strong> Blood gets oxygen in lungs</div>
+                <div class="mb-0">⚡ <strong>Rhythm:</strong> Normal rate 60-100 beats per minute</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+          <div class="card info-card interactive-card h-100">
+            <div class="card-body d-flex flex-column">
+              <div class="text-center mb-3">
+                <i class="bi bi-shield-check cardiac-large-icon icon-info"></i>
+              </div>
+              <h5 class="card-title text-gradient fw-bold mb-3 text-center">Heart Health</h5>
+              <div class="flex-grow-1 text-start">
+                <div class="mb-2">🏃‍♂️ <strong>Exercise:</strong> Strengthens heart muscle</div>
+                <div class="mb-2">🥗 <strong>Diet:</strong> Proper nutrition supports function</div>
+                <div class="mb-2">😴 <strong>Sleep:</strong> Rest allows heart recovery</div>
+                <div class="mb-0">🚭 <strong>No Smoking:</strong> Prevents arterial damage</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Common Heart Conditions Section -->
+    <div class="container mt-5 fade-in">
+      <div class="text-center mb-5">
+        <h2 class="section-title">
+          <i class="bi bi-heart-break me-3"></i>Common Heart Conditions
+        </h2>
+        <p class="lead text-muted">
+          Understanding common cardiac conditions helps in early recognition and treatment.
+        </p>
+      </div>
+
+      <div class="row g-4 mb-5">
+        <div class="col-lg-6 col-md-6">
+          <div class="card info-card interactive-card h-100">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title text-danger fw-bold mb-3">
+                <i class="bi bi-exclamation-triangle me-2"></i>Coronary Artery Disease (CAD)
+              </h5>
+              <div class="flex-grow-1">
+                <div class="mb-2"><strong>Description:</strong> Narrowing of coronary arteries due to plaque buildup</div>
+                <div class="mb-2"><strong>Symptoms:</strong> Chest pain, shortness of breath, fatigue</div>
+                <div class="mb-2"><strong>Risk Factors:</strong> High cholesterol, diabetes, smoking, family history</div>
+                <div class="mb-0"><strong>Treatment:</strong> Lifestyle changes, medications, procedures</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6">
+          <div class="card info-card interactive-card h-100">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title text-warning fw-bold mb-3">
+                <i class="bi bi-lightning me-2"></i>Arrhythmias
+              </h5>
+              <div class="flex-grow-1">
+                <div class="mb-2"><strong>Description:</strong> Irregular heart rhythms affecting heart rate</div>
+                <div class="mb-2"><strong>Types:</strong> Atrial fibrillation, tachycardia, bradycardia</div>
+                <div class="mb-2"><strong>Symptoms:</strong> Palpitations, dizziness, chest discomfort</div>
+                <div class="mb-0"><strong>Management:</strong> Monitoring, medications, devices, procedures</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6">
+          <div class="card info-card interactive-card h-100">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title text-info fw-bold mb-3">
+                <i class="bi bi-heart me-2"></i>Heart Failure
+              </h5>
+              <div class="flex-grow-1">
+                <div class="mb-2"><strong>Description:</strong> Heart cannot pump blood effectively to meet body's needs</div>
+                <div class="mb-2"><strong>Symptoms:</strong> Shortness of breath, swelling, fatigue</div>
+                <div class="mb-2"><strong>Causes:</strong> CAD, high blood pressure, diabetes, cardiomyopathy</div>
+                <div class="mb-0"><strong>Treatment:</strong> Medications, lifestyle changes, devices</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6">
+          <div class="card info-card interactive-card h-100">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title text-success fw-bold mb-3">
+                <i class="bi bi-droplet me-2"></i>Hypertension
+              </h5>
+              <div class="flex-grow-1">
+                <div class="mb-2"><strong>Description:</strong> High blood pressure straining heart and arteries</div>
+                <div class="mb-2"><strong>Silent Killer:</strong> Often no symptoms until complications occur</div>
+                <div class="mb-2"><strong>Complications:</strong> Heart attack, stroke, kidney disease</div>
+                <div class="mb-0"><strong>Control:</strong> Diet, exercise, medications, stress management</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Warning Signs & Symptoms Section -->
+    <div class="container mt-5 fade-in" id="symptoms">
+      <div class="text-center mb-5">
+        <h2 class="section-title-special">
+          <i class="bi bi-exclamation-diamond me-3"></i>Warning Signs & Symptoms
+        </h2>
+        <p class="lead text-muted">
+          Recognizing these symptoms early can save lives. When in doubt, seek immediate medical attention.
+        </p>
+      </div>
+
+      <div class="row g-4 mb-5">
+        <div class="col-lg-4 col-md-6">
+          <div class="alert alert-custom-ocean text-center h-100 d-flex flex-column">
+            <div class="alert-content flex-grow-1">
+              <div class="mb-3">
+                <i class="bi bi-heart-pulse cardiac-medium-large-icon icon-white"></i>
+              </div>
+              <h5 class="alert-title text-white fw-bold mb-3">Chest Pain</h5>
+              <div class="alert-text text-white-75 flex-grow-1">
+                <div class="mb-2">💔 Pressure, squeezing, or burning sensation</div>
+                <div class="mb-2">📍 May radiate to arms, neck, jaw, or back</div>
+                <div class="mb-2">⏰ Can last minutes or come and go</div>
+                <div class="mb-0">🚨 <strong>Call 911 if severe or persistent</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+          <div class="alert alert-custom-teal text-center h-100 d-flex flex-column">
+            <div class="alert-content flex-grow-1">
+              <div class="mb-3">
+                <i class="bi bi-lungs cardiac-medium-large-icon icon-white"></i>
+              </div>
+              <h5 class="alert-title text-white fw-bold mb-3">Shortness of Breath</h5>
+              <div class="alert-text text-white-75 flex-grow-1">
+                <div class="mb-2">💨 Difficulty breathing during normal activities</div>
+                <div class="mb-2">😴 Breathlessness when lying down</div>
+                <div class="mb-2">🏃‍♂️ Unusual fatigue with exertion</div>
+                <div class="mb-0">⚠️ <strong>Seek help if sudden onset</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+          <div class="alert alert-custom-ocean text-center h-100 d-flex flex-column">
+            <div class="alert-content flex-grow-1">
+              <div class="mb-3">
+                <i class="bi bi-activity cardiac-medium-large-icon icon-white"></i>
+              </div>
+              <h5 class="alert-title text-white fw-bold mb-3">Irregular Heartbeat</h5>
+              <div class="alert-text text-white-75 flex-grow-1">
+                <div class="mb-2">💓 Racing, fluttering, or skipping beats</div>
+                <div class="mb-2">😵 Dizziness or lightheadedness</div>
+                <div class="mb-2">😰 Feeling of impending doom</div>
+                <div class="mb-0">🔍 <strong>Monitor and consult doctor</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Heart-Healthy Lifestyle Section -->
+    <div class="container mt-5 fade-in">
+      <div class="text-center mb-5">
+        <h2 class="section-title">
+          <i class="bi bi-heart-fill me-3"></i>Heart-Healthy Lifestyle
+        </h2>
+        <p class="lead text-muted">
+          Simple daily choices that make a big difference in your heart health.
+        </p>
+      </div>
+
+      <div class="row g-4 mb-5">
+        <div class="col-lg-3 col-md-6">
+          <div class="card stat-card interactive-card text-center h-100">
+            <div class="card-body d-flex flex-column">
+              <div class="stat-icon mb-3">
+                <i class="bi bi-heart-pulse cardiac-large-icon icon-danger"></i>
+              </div>
+              <h5 class="fw-bold text-gradient mb-3">Regular Exercise</h5>
+              <div class="flex-grow-1">
+                <div class="mb-2">🏃‍♂️ 150 minutes moderate activity weekly</div>
+                <div class="mb-2">💪 Strength training 2+ days/week</div>
+                <div class="mb-0">🚶‍♀️ Daily walking improves circulation</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <div class="card stat-card interactive-card text-center h-100">
+            <div class="card-body d-flex flex-column">
+              <div class="stat-icon mb-3">
+                <i class="bi bi-apple cardiac-large-icon icon-success"></i>
+              </div>
+              <h5 class="fw-bold text-gradient mb-3">Healthy Diet</h5>
+              <div class="flex-grow-1">
+                <div class="mb-2">🥗 Fruits and vegetables</div>
+                <div class="mb-2">🐟 Lean proteins and fish</div>
+                <div class="mb-0">🚫 Limit salt and saturated fats</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <div class="card stat-card interactive-card text-center h-100">
+            <div class="card-body d-flex flex-column">
+              <div class="stat-icon mb-3">
+                <i class="bi bi-moon-stars cardiac-large-icon icon-info"></i>
+              </div>
+              <h5 class="fw-bold text-gradient mb-3">Quality Sleep</h5>
+              <div class="flex-grow-1">
+                <div class="mb-2">😴 7-8 hours nightly</div>
+                <div class="mb-2">🛏️ Consistent sleep schedule</div>
+                <div class="mb-0">📱 Avoid screens before bed</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <div class="card stat-card interactive-card text-center h-100">
+            <div class="card-body d-flex flex-column">
+              <div class="stat-icon mb-3">
+                <i class="bi bi-emoji-smile cardiac-large-icon icon-warning"></i>
+              </div>
+              <h5 class="fw-bold text-gradient mb-3">Stress Management</h5>
+              <div class="flex-grow-1">
+                <div class="mb-2">🧘‍♀️ Meditation and mindfulness</div>
+                <div class="mb-2">🎵 Relaxing activities</div>
+                <div class="mb-0">👥 Social support networks</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Emergency Action Plan -->
+    <div class="container mt-5 mb-5 fade-in">
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <div class="alert alert-custom-ocean p-4">
+            <div class="alert-content">
+              <div class="text-center mb-4">
+                <i class="bi bi-telephone-fill cardiac-large-icon icon-white"></i>
+                <h3 class="alert-title text-white fw-bold mt-3">Emergency Action Plan</h3>
+              </div>
+              <div class="row g-4">
+                <div class="col-md-6">
+                  <h5 class="text-white fw-bold mb-3">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Call 999 Immediately If:
+                  </h5>
+                  <div class="text-white-75">
+                    <div class="mb-2">🚨 Severe chest pain lasting more than 15 minutes</div>
+                    <div class="mb-2">💔 Chest pain with nausea, sweating, or weakness</div>
+                    <div class="mb-2">😵 Sudden severe shortness of breath</div>
+                    <div class="mb-2">🤯 Fainting or loss of consciousness</div>
+                    <div class="mb-2">🗣️ Sudden difficulty speaking or confusion</div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <h5 class="text-white fw-bold mb-3">
+                    <i class="bi bi-clock-fill me-2"></i>While Waiting for Help:
+                  </h5>
+                  <div class="text-white-75">
+                    <div class="mb-2">💊 Take aspirin if not allergic (chew, don't swallow)</div>
+                    <div class="mb-2">🪑 Sit down and rest comfortably</div>
+                    <div class="mb-2">👕 Loosen tight clothing</div>
+                    <div class="mb-2">🚫 Do not drive yourself to hospital</div>
+                    <div class="mb-2">📞 Stay on the line with dispatcher</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-adj mt-5">
+      <div class="container py-4">
+        
+        <div class="row g-4 justify-content-center">
+          <!-- Column 1: Brand & Mission -->
+          <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+            <!-- Logo and Brand -->
+            <div class="d-flex align-items-center mb-3">
+              <img
+                src="{{ url_for('static', filename='Images/heartLogo.jpg') }}"
+                alt="CardioInsight Logo"
+                class="rounded-circle me-3 footer-logo"
+              />
+              <h5 class="fw-bold mb-0 text-white footer-brand-text">CardioInsight</h5>
+            </div>
+            <div class="footer-text">
+              <p class="mb-2 text-white-75 small">
+                Empowering heart health through AI-driven insights and guidance for a healthier life.
+              </p>
+              <p class="mb-0 fw-semibold text-white footer-copyright">© 2025 CardioInsight. All rights reserved.</p>
+            </div>
+          </div>
+          
+          <!-- Column 2: Quick Links -->
+          <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+            <h6 class="footer-title text-uppercase mb-3">Quick Links</h6>
+            <ul class="footer-links">
+              <li class="mb-1"><a href="{{ url_for('home') }}" class="footer-link">Home</a></li>
+              <li class="mb-1"><a href="{{ url_for('cardiac_info') }}" class="footer-link">Cardiac Information</a></li>
+              <li class="mb-1"><a href="{{ url_for('prevention') }}" class="footer-link">Prevention Tips</a></li>
+              <li><a href="{{ url_for('statistics') }}" class="footer-link">Health Statistics</a></li>
+            </ul>
+          </div>
+          
+          <!-- Column 3: Health Resources -->
+          <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+            <h6 class="footer-title text-uppercase mb-3">Health Resources</h6>
+            <ul class="footer-links">
+              <li class="mb-1"><a href="https://www.who.int/health-topics/cardiovascular-diseases" target="_blank" class="footer-link">WHO - Cardiovascular Diseases</a></li>
+              <li class="mb-1"><a href="https://www.heart.org/" target="_blank" class="footer-link">American Heart Association</a></li>
+              <li class="mb-1"><a href="https://www.cdc.gov/heartdisease/" target="_blank" class="footer-link">CDC - Heart Disease</a></li>
+              <li><a href="https://www.acc.org/" target="_blank" class="footer-link">American College of Cardiology</a></li>
+            </ul>
+          </div>
+          
+          <!-- Column 4: Contact & Social -->
+          <div class="col-lg-3 col-md-6">
+            <h6 class="footer-title text-uppercase mb-3">Connect With Us</h6>
+            <div class="contact-info mb-3">
+              <div class="contact-item mb-2">
+                <i class="bi bi-envelope me-2"></i>
+                <a href="mailto:support@cardioinsight.com" class="footer-link">support@cardioinsight.com</a>
+              </div>
+              <div class="contact-item mb-3">
+                <i class="bi bi-telephone me-2"></i>
+                <span class="text-white">+880-1748829422</span>
+              </div>
+            </div>
+            <!-- Social Links -->
+            <div class="social-links">
+              <span class="small text-white-50 mb-2 d-block">Follow Us:</span>
+              <a href="#" class="social-link me-2" title="Facebook"><i class="bi bi-facebook"></i></a>
+              <a href="#" class="social-link me-2" title="Twitter"><i class="bi bi-twitter"></i></a>
+              <a href="#" class="social-link me-2" title="LinkedIn"><i class="bi bi-linkedin"></i></a>
+              <a href="#" class="social-link" title="Instagram"><i class="bi bi-instagram"></i></a>
+            </div>
+          </div>
+        </div>
+
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

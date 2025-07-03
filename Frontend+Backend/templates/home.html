@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CardioInsight: Smart Heart Risk Detection</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='Images/favicon.png') }}"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Bootstrap 5 -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <!-- Custom CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='CSS/home.css') }}"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light navbar-ocean fade-in">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="{{ url_for('home') }}">
+          <span class="navbar-logo-wrapper">
+            <img
+              src="{{ url_for('static', filename='Images/heartLogo.jpg') }}"
+              alt="Logo"
+              class="navbar-logo"
+            />
+          </span>
+          <span class="ms-2 fw-bold text-gradient navbar-brand-text">CardioInsight</span>
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'home' %}active{% endif %}"
+                href="{{ url_for('home') }}"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'find' %}active{% endif %}"
+                href="{{ url_for('find') }}"
+                >Predict</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'cardiac_info' %}active{% endif %}"
+                href="{{ url_for('cardiac_info') }}"
+                >Cardiac Info</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'statistics' %}active{% endif %}"
+                href="{{ url_for('statistics') }}"
+                >Statistics</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'prevention' %}active{% endif %}"
+                href="{{ url_for('prevention') }}"
+                >Prevention</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'profile' %}active{% endif %}"
+                href="{{ url_for('profile') }}"
+                >Profile</a
+              >
+            </li>
+            {% if session.get('username') %}
+            <li class="nav-item">
+              <form
+                action="{{ url_for('logout') }}"
+                method="post"
+                class="logout-form"
+              >
+                <button class="nav-link btn btn-link logout-btn" type="submit">
+                  Logout
+                </button>
+              </form>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Floating Particles Background -->
+    <div class="floating-particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    
+    
+
+    <!-- Greeting Section as Dismissible Alert -->
+    <div class="container mt-4">
+      {% if name != "Guest" %}
+      <div class="alert alert-custom-ocean alert-dismissible fade show text-center shadow-lg" role="alert" id="greetingAlert">
+        <div class="alert-content">
+          <h5 class="alert-title text-white fw-bold mb-2">
+            👋 Welcome back, {{ name }}!
+          </h5>
+          <p class="alert-text text-white-75 mb-0">
+            We're glad to see you taking care of your heart health.
+          </p>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% else %}
+      <div class="alert alert-custom-teal alert-dismissible fade show text-center shadow-lg" role="alert" id="greetingAlert">
+        <div class="alert-content">
+          <h5 class="alert-title text-white fw-bold mb-2">
+         👋 Welcome, Guest!
+          </h5>
+          <p class="alert-text text-white-75 mb-3">
+            Login to unlock personalized features and track your heart health journey. 🚀
+          </p>
+          <a href="{{ url_for('login') }}" class="btn btn-light btn-sm px-4 py-2 fw-semibold">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Login for Full Access
+          </a>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endif %}
+    </div>
+
+    <div id="home-section">
+      <!-- Hero Section -->
+      <section class="hero-section-wrapper py-5 shadow-lg">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-lg-7 mb-4 mb-lg-0 text-center">
+              <h1 class="display-4 fw-bold text-white mb-3">
+                Welcome to CardioInsight
+              </h1>
+              <p class="lead text-white-50 mb-4 lead-custom">
+                Your trusted companion for early cardiac risk detection,
+                education, and prevention.<br />
+                <span class="fw-bold">Empower yourself</span> with AI-driven
+                insights and evidence-based guidance for a healthier heart. 
+              </p>
+              <ul
+                class="list-unstyled text-start mx-auto mb-4"
+                class="max-width-500"
+              >
+                <li class="mb-2 text-white">
+                  <span class="text-warning fw-bold">✅</span> Personalized heart
+                  risk assessment in seconds 
+                </li>
+                <li class="mb-2 text-white">
+                  <span class="text-warning fw-bold">✅</span> Learn key cardiac
+                  terms and prevention strategies 
+                </li>
+                <li class="mb-2 text-white">
+                  <span class="text-warning fw-bold">✅</span> Trusted resources
+                  and professional advice 
+                </li>
+              </ul>
+              <div class="text-center">
+                <a
+                  href="{{ url_for('find') }}"
+                  class="btn btn-lg btn-assessment px-5 py-3 shadow"
+                >
+                  🚀 Start Your Assessment
+                </a>
+              </div>
+            </div>
+            <!-- Heart Health Image -->
+            <div class="col-lg-5 d-none d-lg-block text-center mt-4">
+              <img
+                src="https://media.nature.com/lw800/magazine-assets/d42473-020-00278-7/d42473-020-00278-7_18889308.jpg"
+                alt="Heart Health Illustration"
+                class="img-fluid rounded shadow height-380"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Cardiology Image Slider -->
+      <div
+        id="cardiologyCarousel"
+        class="carousel slide cardiology-slider container mt-5"
+        data-bs-ride="carousel"
+        data-bs-interval="4000"
+      >
+        <!-- Carousel Indicators -->
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#cardiologyCarousel" data-bs-slide-to="0" class="active"></button>
+          <button type="button" data-bs-target="#cardiologyCarousel" data-bs-slide-to="1"></button>
+          <button type="button" data-bs-target="#cardiologyCarousel" data-bs-slide-to="2"></button>
+          <button type="button" data-bs-target="#cardiologyCarousel" data-bs-slide-to="3"></button>
+          <button type="button" data-bs-target="#cardiologyCarousel" data-bs-slide-to="4"></button>
+        </div>
+        
+        <div class="carousel-inner rounded-3">
+          <!-- Slide 1: ECG & Cardiac Monitoring -->
+          <div class="carousel-item active">
+            <img
+              src="https://images.unsplash.com/photo-1504439468489-c8920d796a29?auto=format&fit=crop&w=1500&q=80"
+              class="d-block w-100"
+              alt="ECG Cardiac Monitoring"
+            />
+            <div class="carousel-caption d-none d-md-block slider-caption-custom">
+              <h4 class="fw-bold text-white mb-2">
+                <i class="bi bi-heart-pulse-fill me-2"></i>Advanced Cardiac Monitoring
+              </h4>
+              <p class="slider-caption-text mb-0">
+                State-of-the-art ECG technology helps detect arrhythmias, ischemia, and other cardiac abnormalities with precision.
+              </p>
+            </div>
+          </div>
+          
+          <!-- Slide 2: Heart Health Prevention -->
+          <div class="carousel-item">
+            <img
+              src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=1500&q=80"
+              class="d-block w-100"
+              alt="Heart Health Prevention"
+            />
+            <div class="carousel-caption d-none d-md-block slider-caption-custom">
+              <h4 class="fw-bold text-white mb-2">
+                <i class="bi bi-shield-heart-fill me-2"></i>Prevention is the Best Medicine
+              </h4>
+              <p class="slider-caption-text mb-0">
+                Regular exercise, healthy diet, and lifestyle modifications can prevent up to 80% of premature heart disease.
+              </p>
+            </div>
+          </div>
+          
+          <!-- Slide 3: Medical Consultation -->
+          <div class="carousel-item">
+            <img
+              src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=1500&q=80"
+              class="d-block w-100"
+              alt="Medical Consultation"
+            />
+            <div class="carousel-caption d-none d-md-block slider-caption-custom">
+              <h4 class="fw-bold text-white mb-2">
+                <i class="bi bi-person-hearts me-2"></i>Expert Medical Consultation
+              </h4>
+              <p class="slider-caption-text mb-0">
+                Regular check-ups with cardiology specialists ensure early detection and personalized treatment plans.
+              </p>
+            </div>
+          </div>
+          
+          <!-- Slide 4: Cardiac Imaging -->
+          <div class="carousel-item">
+            <img
+              src="https://images.unsplash.com/photo-1576671081837-49000212a370?auto=format&fit=crop&w=1500&q=80"
+              class="d-block w-100"
+              alt="Cardiac Imaging"
+            />
+            <div class="carousel-caption d-none d-md-block slider-caption-custom">
+              <h4 class="fw-bold text-white mb-2">
+                <i class="bi bi-camera-reels-fill me-2"></i>Advanced Cardiac Imaging
+              </h4>
+              <p class="slider-caption-text mb-0">
+                Echocardiography, CT, and MRI provide detailed heart imaging for accurate diagnosis and treatment planning.
+              </p>
+            </div>
+          </div>
+          
+          <!-- Slide 6: Emergency Cardiac Care -->
+          <div class="carousel-item">
+            <img
+              src="https://images.unsplash.com/photo-1504813184591-01572f98c85f?auto=format&fit=crop&w=1500&q=80"
+              class="d-block w-100"
+              alt="Emergency Cardiac Care"
+            />
+            <div class="carousel-caption d-none d-md-block slider-caption-custom">
+              <h4 class="fw-bold text-white mb-2">
+                <i class="bi bi-lightning-charge-fill me-2"></i>Emergency Cardiac Response
+              </h4>
+              <p class="slider-caption-text mb-0">
+                Rapid response emergency care and defibrillation can be life-saving during cardiac emergencies and heart attacks.
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <button
+          class="carousel-control-prev"
+          type="button"
+          data-bs-target="#cardiologyCarousel"
+          data-bs-slide="prev"
+        >
+          <span class="carousel-control-prev-icon"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button
+          class="carousel-control-next"
+          type="button"
+          data-bs-target="#cardiologyCarousel"
+          data-bs-slide="next"
+        >
+          <span class="carousel-control-next-icon"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+
+      <!-- Section Title -->
+      <div class="container mt-5 mb-4">
+        <div class="row justify-content-center">
+          <div class="col-lg-8 text-center">
+            <h2 class="section-title-special mb-3">
+              <i class="bi bi-lightbulb text-primary me-2"></i>
+              Essential Heart Health Knowledge
+            </h2>
+            <p class="lead text-muted mb-0">
+              Get started with fundamental cardiac concepts, understand the importance of early screening, 
+              and discover proven strategies to protect your heart.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Cards Section -->
+      <div class="container mt-5">
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="card info-card interactive-card h-100 enhanced-card">
+              <div class="card-body d-flex flex-column h-100">
+                <div class="card-icon-header mb-3">
+                  <i class="bi bi-mortarboard-fill text-success card-icon"></i>
+                  <h5 class="card-title text-success mb-0">Quick Learning Hub</h5>
+                </div>
+                <div class="mb-3 flex-grow-1">
+                  <div class="mb-2 card-item">
+                    <div class="card-item-icon">
+                      <i class="bi bi-heart-fill text-danger"></i>
+                    </div>
+                    <div class="card-item-content">
+                      <b>Heart Attack:</b> When blood flow to heart is blocked
+                    </div>
+                  </div>
+                  <div class="mb-2 card-item">
+                    <div class="card-item-icon">
+                      <i class="bi bi-activity text-warning"></i>
+                    </div>
+                    <div class="card-item-content">
+                      <b>Arrhythmia:</b> Irregular heartbeat patterns
+                    </div>
+                  </div>
+                  <div class="mb-2 card-item">
+                    <div class="card-item-icon">
+                      <i class="bi bi-lightning-charge-fill text-primary"></i>
+                    </div>
+                    <div class="card-item-content">
+                      <b>Angina:</b> Chest pain from reduced blood flow
+                    </div>
+                  </div>
+                  <div class="mb-2 card-item">
+                    <div class="card-item-icon">
+                      <i class="bi bi-droplet-fill text-info"></i>
+                    </div>
+                    <div class="card-item-content">
+                      <b>Cholesterol:</b> Blood fats affecting heart health
+                    </div>
+                  </div>
+                  <div class="mb-2 card-item">
+                    <div class="card-item-icon">
+                      <i class="bi bi-thermometer-half text-danger"></i>
+                    </div>
+                    <div class="card-item-content">
+                      <b>Hypertension:</b> High blood pressure condition
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-center mt-auto">
+                  <a
+                    href="{{ url_for('cardiac_info') }}"
+                    class="btn btn-outline-success interactive-btn enhanced-btn"
+                    ><i class="bi bi-book me-2"></i>Learn More</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card info-card interactive-card h-100 enhanced-card">
+              <div class="card-body d-flex flex-column h-100">
+                <div class="card-icon-header mb-3">
+                  <i class="bi bi-clipboard2-heart-fill text-success card-icon"></i>
+                  <h5 class="card-title text-success mb-0">
+                    Why Use CardioInsight?
+                  </h5>
+                </div>
+                <div class="mb-3 flex-grow-1">
+                  <div class="mb-2 card-item">
+                    <div class="card-item-icon">
+                      <i class="bi bi-speedometer2 text-success"></i>
+                    </div>
+                    <div class="card-item-content">Instant AI-powered risk assessment</div>
+                  </div>
+                  <div class="mb-2 card-item">
+                    <div class="card-item-icon">
+                      <i class="bi bi-person-check text-primary"></i>
+                    </div>
+                    <div class="card-item-content">Personalized health recommendations</div>
+                  </div>
+                  <div class="mb-2 card-item">
+                    <div class="card-item-icon">
+                      <i class="bi bi-shield-lock text-info"></i>
+                    </div>
+                    <div class="card-item-content">Complete privacy and data security</div>
+                  </div>
+                  <div class="mb-2 card-item">
+                    <div class="card-item-icon">
+                      <i class="bi bi-journal-medical text-warning"></i>
+                    </div>
+                    <div class="card-item-content">Track assessment history over time</div>
+                  </div>
+                  <div class="mb-2 card-item">
+                    <div class="card-item-icon">
+                      <i class="bi bi-people-fill text-success"></i>
+                    </div>
+                    <div class="card-item-content">Family health monitoring support</div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-center mt-auto">
+                  <a
+                    href="{{ url_for('find') }}"
+                    class="btn btn-outline-success interactive-btn enhanced-btn"
+                    ><i class="bi bi-bullseye me-2"></i>Check Your Risk</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card info-card interactive-card h-100 enhanced-card">
+              <div class="card-body d-flex flex-column h-100">
+                <div class="card-icon-header mb-3">
+                  <i class="bi bi-heart-arrow text-success card-icon"></i>
+                  <h5 class="card-title text-success mb-0">Healthy Heart Tips</h5>
+                </div>
+                <div class="mb-3 flex-grow-1">
+                  <div class="mb-2 card-item">
+                    <div class="card-item-icon">
+                      <i class="bi bi-apple text-success"></i>
+                    </div>
+                    <div class="card-item-content">
+                      Eat nutrient-rich fruits and vegetables
+                    </div>
+                  </div>
+                  <div class="mb-2 card-item">
+                    <div class="card-item-icon">
+                      <i class="bi bi-bicycle text-primary"></i>
+                    </div>
+                    <div class="card-item-content">
+                      Stay active with enjoyable exercises
+                    </div>
+                  </div>
+                  <div class="mb-2 card-item">
+                    <div class="card-item-icon">
+                      <i class="bi bi-moon-stars text-primary"></i>
+                    </div>
+                    <div class="card-item-content">Get 7-8 hours of quality sleep</div>
+                  </div>
+                  <div class="mb-2 card-item">
+                    <div class="card-item-icon">
+                      <i class="bi bi-emoji-laughing text-warning"></i>
+                    </div>
+                    <div class="card-item-content">
+                      Manage stress through relaxation
+                    </div>
+                  </div>
+                  <div class="mb-2 card-item">
+                    <div class="card-item-icon">
+                      <i class="bi bi-shield-x text-danger"></i>
+                    </div>
+                    <div class="card-item-content">Avoid smoking and limit alcohol</div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-center mt-auto">
+                  <a
+                    href="{{ url_for('prevention') }}"
+                    class="btn btn-outline-success interactive-btn enhanced-btn"
+                    ><i class="bi bi-journal-medical me-2"></i>More Tips</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Statistics Section -->
+      <div class="container my-5">
+        <h3 class="text-center section-title-special mb-4">
+          <i class="bi bi-trophy-fill me-2"></i>Why to Choose CardioInsight?
+        </h3>
+        <div class="row g-4 justify-content-center">
+          <div class="col-md-4">
+            <div
+              class="stat-card interactive-card p-4 h-100 text-center shadow-sm rounded position-relative"
+            >
+              <div class="stat-icon mb-3">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/3135/3135686.png"
+                  alt="AI Technology"
+                  class="height-54"
+                />
+              </div>
+              <h4 class="stat-value text-primary mb-1">AI-Powered</h4>
+              <p class="stat-label mb-2">Advanced machine learning algorithms</p>
+              <span class="stat-detail text-muted small"
+                >Our cutting-edge AI technology analyzes your health data using 
+                clinically validated models to provide accurate risk assessments.</span
+              >
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div
+              class="stat-card interactive-card p-4 h-100 text-center shadow-sm rounded position-relative"
+            >
+              <div class="stat-icon mb-3">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png"
+                  alt="Users Trust"
+                  class="height-54"
+                />
+              </div>
+              <h4 class="stat-value text-success mb-1">10,000+</h4>
+              <p class="stat-label mb-2">
+                Trusted by users worldwide
+              </p>
+              <span class="stat-detail text-muted small"
+                >Join thousands of users who trust CardioInsight for their 
+                heart health monitoring and early risk detection.</span
+              >
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div
+              class="stat-card interactive-card p-4 h-100 text-center shadow-sm rounded position-relative"
+            >
+              <div class="stat-icon mb-3">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                  alt="Quick Assessment"
+                  class="height-54"
+                />
+              </div>
+              <h4 class="stat-value text-warning mb-1">< 5 Min</h4>
+              <p class="stat-label mb-2">Quick and comprehensive assessment</p>
+              <span class="stat-detail text-muted small"
+                >Get your personalized heart health report in under 5 minutes 
+                with our streamlined assessment process.</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonials Section -->
+      <div class="container my-5">
+        <h3 class="text-center section-title-special">💬 What Our Users Say</h3>
+        <div class="row justify-content-center">
+          <div class="col-md-4 d-flex">
+            <div class="testimonial-card interactive-card p-4 mb-3 flex-fill">
+              <p class="mb-1">
+                "CardioInsight helped me understand my risk and take action. The
+                assessment was quick and easy!"
+              </p>
+              <small>– Sarah, 42 </small>
+            </div>
+          </div>
+          <div class="col-md-4 d-flex">
+            <div class="testimonial-card interactive-card p-4 mb-3 flex-fill">
+              <p class="mb-1">
+                "As a doctor, I recommend CardioInsight to my patients for its
+                accuracy and educational value."
+              </p>
+              <small>– Dr. Ahmed, Cardiologist</small>
+            </div>
+          </div>
+          <div class="col-md-4 d-flex">
+            <div class="testimonial-card interactive-card p-4 mb-3 flex-fill">
+              <p class="mb-1">
+                "The prevention tips and resources are excellent. I feel more
+                confident about managing my heart health."
+              </p>
+              <small>– Priya, 35 </small>
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-md-4 d-flex">
+            <div class="testimonial-card interactive-card p-4 mb-3 flex-fill">
+              <p class="mb-1">
+                "User-friendly interface and trustworthy information. Highly
+                recommended for anyone concerned about heart disease."
+              </p>
+              <small>– John, 50 </small>
+            </div>
+          </div>
+          <div class="col-md-4 d-flex">
+            <div class="testimonial-card interactive-card p-4 mb-3 flex-fill">
+              <p class="mb-1">
+                "I used CardioInsight for my parents and it gave us peace of
+                mind. The results were clear and actionable."
+              </p>
+              <small>– Ayesha, 28 </small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ Section -->
+      <div class="container my-5 faq-section">
+        <h3 class="text-center section-title-special">Frequently Asked Questions</h3>
+        <div class="accordion" id="faqAccordion">
+          <div class="accordion-item enhanced-accordion-item">
+            <h2 class="accordion-header" id="faq1">
+              <button
+                class="accordion-button collapsed enhanced-accordion-button"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#faqCollapse1"
+              >
+                <i class="bi bi-shield-lock-fill text-primary me-3 faq-icon"></i>
+                <span>Is my data safe and private?</span>
+              </button>
+            </h2>
+            <div
+              id="faqCollapse1"
+              class="accordion-collapse collapse"
+              data-bs-parent="#faqAccordion"
+            >
+              <div class="accordion-body enhanced-accordion-body">
+                <div class="faq-answer-item">
+                  <i class="bi bi-check-circle-fill text-success me-2"></i>
+                  <span class="fw-bold text-success">Absolutely.</span>
+                </div>
+                <p class="mb-2">
+                  All your personal and health data is 
+                  <span class="highlight-text"><i class="bi bi-lock-fill me-1"></i><b>encrypted</b></span> 
+                  and stored securely. We strictly adhere to privacy standards and never
+                  share your information with third parties.
+                </p>
+                <div class="faq-answer-item">
+                  <i class="bi bi-shield-check text-info me-2"></i>
+                  <span>Your trust and confidentiality are our top priorities.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item enhanced-accordion-item">
+            <h2 class="accordion-header" id="faq2">
+              <button
+                class="accordion-button collapsed enhanced-accordion-button"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#faqCollapse2"
+              >
+                <i class="bi bi-bullseye text-success me-3 faq-icon"></i>
+                <span>How accurate is the risk assessment?</span>
+              </button>
+            </h2>
+            <div
+              id="faqCollapse2"
+              class="accordion-collapse collapse"
+              data-bs-parent="#faqAccordion"
+            >
+              <div class="accordion-body enhanced-accordion-body">
+                <p class="mb-2">
+                  Our <span class="highlight-text"><i class="bi bi-robot me-1"></i><b>AI-powered assessment</b></span> 
+                  is built on validated medical research and reviewed by certified cardiologists.
+                </p>
+                <div class="faq-answer-item">
+                  <i class="bi bi-info-circle-fill text-warning me-2"></i>
+                  <span>While it provides a reliable estimate, always consult a healthcare
+                  professional for a comprehensive diagnosis and personalized advice.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item enhanced-accordion-item">
+            <h2 class="accordion-header" id="faq3">
+              <button
+                class="accordion-button collapsed enhanced-accordion-button"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#faqCollapse3"
+              >
+                <i class="bi bi-people-fill text-info me-3 faq-icon"></i>
+                <span>Can I use CardioInsight for my family?</span>
+              </button>
+            </h2>
+            <div
+              id="faqCollapse3"
+              class="accordion-collapse collapse"
+              data-bs-parent="#faqAccordion"
+            >
+              <div class="accordion-body enhanced-accordion-body">
+                <div class="faq-answer-item mb-2">
+                  <i class="bi bi-check-circle-fill text-success me-2"></i>
+                  <span class="fw-bold">Yes!</span>
+                </div>
+                <p class="mb-2">
+                  CardioInsight can be used for yourself or your loved ones. Simply enter the 
+                  relevant health details for each individual to get a personalized assessment 
+                  and recommendations.
+                </p>
+                <div class="faq-answer-item">
+                  <i class="bi bi-heart-fill text-danger me-2"></i>
+                  <span>Perfect for family health monitoring.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item enhanced-accordion-item">
+            <h2 class="accordion-header" id="faq4">
+              <button
+                class="accordion-button collapsed enhanced-accordion-button"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#faqCollapse4"
+              >
+                <i class="bi bi-capsule-pill text-warning me-3 faq-icon"></i>
+                <span>Do I need a doctor's prescription to use this tool?</span>
+              </button>
+            </h2>
+            <div
+              id="faqCollapse4"
+              class="accordion-collapse collapse"
+              data-bs-parent="#faqAccordion"
+            >
+              <div class="accordion-body enhanced-accordion-body">
+                <div class="faq-answer-item mb-2">
+                  <i class="bi bi-x-circle-fill text-success me-2"></i>
+                  <span class="fw-bold text-success">No prescription required.</span>
+                </div>
+                <p class="mb-2">
+                  CardioInsight is designed for public use and education. However,
+                  for any medical concerns or symptoms, please consult your
+                  healthcare provider.
+                </p>
+                <div class="faq-answer-item">
+                  <i class="bi bi-person-badge-fill text-primary me-2"></i>
+                  <span>Always seek professional medical advice for health concerns.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item enhanced-accordion-item">
+            <h2 class="accordion-header" id="faq5">
+              <button
+                class="accordion-button collapsed enhanced-accordion-button"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#faqCollapse5"
+              >
+                <i class="bi bi-calendar-check-fill text-info me-3 faq-icon"></i>
+                <span>How often should I check my heart risk?</span>
+              </button>
+            </h2>
+            <div
+              id="faqCollapse5"
+              class="accordion-collapse collapse"
+              data-bs-parent="#faqAccordion"
+            >
+              <div class="accordion-body enhanced-accordion-body">
+                <div class="faq-answer-item mb-2">
+                  <i class="bi bi-calendar3 text-success me-2"></i>
+                  <span>We recommend checking your risk at least <b>once a year</b></span>
+                </div>
+                <p class="mb-2">
+                  Or whenever you experience changes in your health, lifestyle, or
+                  family history. Regular monitoring helps you stay proactive
+                  about your heart health.
+                </p>
+                <div class="faq-answer-item">
+                  <i class="bi bi-arrow-clockwise text-primary me-2"></i>
+                  <span>Stay consistent with your health monitoring routine.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item enhanced-accordion-item">
+            <h2 class="accordion-header" id="faq6">
+              <button
+                class="accordion-button collapsed enhanced-accordion-button"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#faqCollapse6"
+              >
+                <i class="bi bi-exclamation-triangle-fill text-danger me-3 faq-icon"></i>
+                <span>What should I do if my risk is high?</span>
+              </button>
+            </h2>
+            <div
+              id="faqCollapse6"
+              class="accordion-collapse collapse"
+              data-bs-parent="#faqAccordion"
+            >
+              <div class="accordion-body enhanced-accordion-body">
+                <div class="faq-answer-item mb-2">
+                  <i class="bi bi-info-circle-fill text-warning me-2"></i>
+                  <span>If your assessment indicates a <b>high risk</b>, don't panic.</span>
+                </div>
+                <p class="mb-2">
+                  Review the prevention tips provided, adopt a heart-healthy
+                  lifestyle, and schedule an appointment with your healthcare
+                  provider for further evaluation and guidance.
+                </p>
+                <div class="faq-answer-item">
+                  <i class="bi bi-briefcase-fill text-primary me-2"></i>
+                  <span>Professional medical consultation is always recommended for high-risk results.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item enhanced-accordion-item">
+            <h2 class="accordion-header" id="faq7">
+              <button
+                class="accordion-button collapsed enhanced-accordion-button"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#faqCollapse7"
+              >
+                <i class="bi bi-phone-fill text-success me-3 faq-icon"></i>
+                <span>Can I access CardioInsight on my mobile device?</span>
+              </button>
+            </h2>
+            <div
+              id="faqCollapse7"
+              class="accordion-collapse collapse"
+              data-bs-parent="#faqAccordion"
+            >
+              <div class="accordion-body enhanced-accordion-body">
+                <div class="faq-answer-item mb-2">
+                  <i class="bi bi-check-circle-fill text-success me-2"></i>
+                  <span class="fw-bold">Yes!</span>
+                </div>
+                <p class="mb-2">
+                  CardioInsight is fully responsive and works seamlessly on smartphones, 
+                  tablets, and desktops. Access your health assessments anywhere, anytime.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item enhanced-accordion-item">
+            <h2 class="accordion-header" id="faq8">
+              <button
+                class="accordion-button collapsed enhanced-accordion-button"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#faqCollapse8"
+              >
+                <i class="bi bi-telephone-fill text-success me-3 faq-icon"></i>
+                <span>Who can I contact for support or feedback?</span>
+              </button>
+            </h2>
+            <div
+              id="faqCollapse8"
+              class="accordion-collapse collapse"
+              data-bs-parent="#faqAccordion"
+            >
+              <div class="accordion-body enhanced-accordion-body">
+                <div class="faq-answer-item mb-2">
+                  <i class="bi bi-headset text-info me-2"></i>
+                  <span>For any questions, support, or feedback, please email us at</span>
+                </div>
+                <div class="faq-answer-item mb-2">
+                  <i class="bi bi-envelope-fill text-primary me-2"></i>
+                  <span><a
+                    href="mailto:support@cardioinsight.com"
+                    class="text-primary fw-bold"
+                    >support@cardioinsight.com</a></span>
+                </div>
+                <div class="faq-answer-item">
+                  <i class="bi bi-hand-thumbs-up-fill text-success me-2"></i>
+                  <span>We're here to help!</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast Container -->
+      {% if msg %}
+      <div
+        aria-live="polite"
+        aria-atomic="true"
+        class="position-fixed top-0 start-50 translate-middle-x p-3"
+        style="z-index: 1080;"
+      >
+        <div 
+          id="profileToast" 
+          class="toast shadow-lg border-0 rounded-3 {% if msg_type == 'success' or (msg and ('success' in msg|lower or 'logged in' in msg|lower or 'logged out' in msg|lower or 'registered' in msg|lower or 'updated' in msg|lower or 'created' in msg|lower)) %}text-bg-success{% elif msg_type == 'danger' or (msg and ('error' in msg|lower or 'fail' in msg|lower or 'exists' in msg|lower or 'invalid' in msg|lower or 'wrong' in msg|lower)) %}text-bg-danger{% else %}text-bg-info{% endif %}"
+          role="alert"
+          aria-live="assertive" 
+          aria-atomic="true" 
+          data-bs-delay="4000"
+          style="min-width: 320px; max-width: 500px;"
+        >
+          <div class="toast-header">
+            <div class="me-2">
+              {% if msg_type == 'success' or (msg and ('success' in msg|lower or 'logged in' in msg|lower or 'logged out' in msg|lower or 'registered' in msg|lower or 'updated' in msg|lower or 'created' in msg|lower)) %}
+              <i class="bi bi-check-circle-fill text-success"></i>
+              {% elif msg_type == 'danger' or (msg and ('error' in msg|lower or 'fail' in msg|lower or 'exists' in msg|lower or 'invalid' in msg|lower or 'wrong' in msg|lower)) %}
+              <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+              {% else %}
+              <i class="bi bi-info-circle-fill text-info"></i>
+              {% endif %}
+            </div>
+            <strong class="me-auto">
+              {% if msg_type == 'success' or (msg and ('success' in msg|lower or 'logged in' in msg|lower or 'logged out' in msg|lower or 'registered' in msg|lower or 'updated' in msg|lower or 'created' in msg|lower)) %}
+              Success
+              {% elif msg_type == 'danger' or (msg and ('error' in msg|lower or 'fail' in msg|lower or 'exists' in msg|lower or 'invalid' in msg|lower or 'wrong' in msg|lower)) %}
+              Error
+              {% else %}
+              Info
+              {% endif %}
+            </strong>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="toast-body">
+            {{ msg }}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    <!-- End of home-section -->
+
+    <!-- Footer -->
+    <footer class="footer-adj mt-5">
+      <div class="container py-4">
+        
+        <div class="row g-4 justify-content-center">
+          <!-- Column 1: Brand & Mission -->
+          <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+            <!-- Logo and Brand -->
+            <div class="d-flex align-items-center mb-3">
+              <img
+                src="{{ url_for('static', filename='Images/heartLogo.jpg') }}"
+                alt="CardioInsight Logo"
+                class="rounded-circle me-3 footer-logo"
+              />
+              <h5 class="fw-bold mb-0 text-white footer-brand-text">CardioInsight</h5>
+            </div>
+            <div class="footer-text">
+              <p class="mb-2 text-white-75 small">
+                Empowering heart health through AI-driven insights and guidance for a healthier life.
+              </p>
+              <p class="mb-0 fw-semibold text-white footer-copyright">© 2025 CardioInsight. All rights reserved.</p>
+            </div>
+          </div>
+          
+          <!-- Column 2: Quick Links -->
+          <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+            <h6 class="footer-title text-uppercase mb-3">Quick Links</h6>
+            <ul class="footer-links">
+              <li class="mb-1"><a href="{{ url_for('home') }}" class="footer-link">Home</a></li>
+              <li class="mb-1"><a href="{{ url_for('cardiac_info') }}" class="footer-link">Cardiac Information</a></li>
+              <li class="mb-1"><a href="{{ url_for('prevention') }}" class="footer-link">Prevention Tips</a></li>
+              <li><a href="{{ url_for('statistics') }}" class="footer-link">Health Statistics</a></li>
+            </ul>
+          </div>
+          
+          <!-- Column 3: Health Resources -->
+          <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+            <h6 class="footer-title text-uppercase mb-3">Health Resources</h6>
+            <ul class="footer-links">
+              <li class="mb-1"><a href="https://www.who.int/health-topics/cardiovascular-diseases" target="_blank" class="footer-link">WHO - Cardiovascular Diseases</a></li>
+              <li class="mb-1"><a href="https://www.heart.org/" target="_blank" class="footer-link">American Heart Association</a></li>
+              <li class="mb-1"><a href="https://www.cdc.gov/heartdisease/" target="_blank" class="footer-link">CDC - Heart Disease</a></li>
+              <li><a href="https://www.acc.org/" target="_blank" class="footer-link">American College of Cardiology</a></li>
+            </ul>
+          </div>
+          
+          <!-- Column 4: Contact & Social -->
+          <div class="col-lg-3 col-md-6">
+            <h6 class="footer-title text-uppercase mb-3">Connect With Us</h6>
+            <div class="contact-info mb-3">
+              <div class="contact-item mb-2">
+                <i class="bi bi-envelope me-2"></i>
+                <a href="mailto:support@cardioinsight.com" class="footer-link">support@cardioinsight.com</a>
+              </div>
+              <div class="contact-item mb-3">
+                <i class="bi bi-telephone me-2"></i>
+                <span class="text-white">+880-1748829422</span>
+              </div>
+            </div>
+            <!-- Social Links -->
+            <div class="social-links">
+              <span class="small text-white-50 mb-2 d-block">Follow Us:</span>
+              <a href="#" class="social-link me-2" title="Facebook"><i class="bi bi-facebook"></i></a>
+              <a href="#" class="social-link me-2" title="Twitter"><i class="bi bi-twitter"></i></a>
+              <a href="#" class="social-link me-2" title="LinkedIn"><i class="bi bi-linkedin"></i></a>
+              <a href="#" class="social-link" title="Instagram"><i class="bi bi-instagram"></i></a>
+            </div>
+          </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Toast JavaScript -->
+    {% if msg %}
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var toastEl = document.getElementById("profileToast");
+        if (toastEl) {
+          var toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+          toast.show();
+        }
+      });
+    </script>
+    {% endif %}
+  </body>
+</html>

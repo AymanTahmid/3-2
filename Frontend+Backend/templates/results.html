@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CardioInsight - Heart Disease Prediction Results</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='Images/favicon.png') }}">
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/results.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light navbar-ocean fade-in">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('home') }}">
+                <span class="navbar-logo-wrapper">
+                    <img src="{{ url_for('static', filename='Images/heartLogo.jpg') }}" alt="Logo" class="navbar-logo">
+                </span>
+                <span class="ms-2 fw-bold text-gradient navbar-brand-text">CardioInsight</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'home' %}active{% endif %}" href="{{ url_for('home') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'find' %}active{% endif %}" href="{{ url_for('find') }}">Predict</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'cardiac_info' %}active{% endif %}" href="{{ url_for('cardiac_info') }}">Cardiac Info</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'statistics' %}active{% endif %}" href="{{ url_for('statistics') }}">Statistics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'prevention' %}active{% endif %}" href="{{ url_for('prevention') }}">Prevention</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'profile' %}active{% endif %}" href="{{ url_for('profile') }}">Profile</a>
+                    </li>
+                    {% if session.get('username') %}
+                    <li class="nav-item">
+                        <form action="{{ url_for('logout') }}" method="post" class="logout-form">
+                            <button class="nav-link btn btn-link logout-btn" type="submit">Logout</button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="results-container">
+            <div class="result-header">
+                <h1 class="fw-bold text-primary mb-3">
+                    <i class="bi bi-heart-pulse me-3"></i>Heart Disease Assessment Results
+                </h1>
+                <h5>Analysis report for <b>{{ name }} !</b></h5>
+            </div>
+
+            {% if msg and msg is mapping %}
+                <!-- Prediction Results -->
+                <div class="result-card {% if msg.prediction == 'Presence' %}result-positive{% else %}result-negative{% endif %}">
+                    <div class="text-center mb-4">
+                        {% if msg.prediction == 'Presence' %}
+                            <i class="bi bi-exclamation-triangle-fill result-icon text-danger"></i>
+                            <h2 class="fw-bold text-danger">Heart Disease Risk Detected</h2>
+                        {% else %}
+                            <i class="bi bi-check-circle-fill result-icon text-success"></i>
+                            <h2 class="fw-bold text-success">Healthy Heart - Low Risk</h2>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Enhanced Metrics Display -->
+                    <div class="result-metrics-container">
+                        <div class="row g-4">
+                            <div class="col-lg-4 col-md-6">
+                                <div class="metric-card">
+                                    <div class="metric-content">
+                                        <div class="metric-content-top">
+                                            <div class="metric-icon {% if msg.prediction == 'Presence' %}danger{% else %}success{% endif %}">
+                                                {% if msg.prediction == 'Presence' %}
+                                                <i class="bi bi-exclamation-triangle-fill"></i>
+                                                {% else %}
+                                                <i class="bi bi-shield-check"></i>
+                                                {% endif %}
+                                            </div>
+                                            <div class="metric-value {% if msg.prediction == 'Presence' %}text-danger{% else %}text-success{% endif %}">
+                                                {{ msg.prediction }}
+                                            </div>
+                                            <div class="metric-label">Risk Assessment</div>
+                                        </div>
+                                        <div class="metric-content-bottom">
+                                            <div class="metric-description">
+                                                {% if msg.prediction == 'Presence' %}
+                                                The AI model detected potential heart disease risk factors in your assessment.
+                                                {% else %}
+                                                Your assessment indicates low risk for heart disease based on the provided data.
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-4 col-md-6">
+                                <div class="metric-card">
+                                    <div class="metric-content">
+                                        <div class="metric-content-top">
+                                            <div class="metric-icon">
+                                                <i class="bi bi-bullseye"></i>
+                                            </div>
+                                            <div class="metric-value text-primary">{{ msg.confidence }}</div>
+                                            <div class="metric-label">Model Confidence</div>
+                                        </div>
+                                        <div class="metric-content-bottom">
+                                            <div class="metric-description">
+                                                The model's certainty in its prediction. This represents how confident the AI is in the final decision.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-4 col-md-12">
+                                <div class="metric-card">
+                                    <div class="metric-content">
+                                        <div class="metric-content-top">
+                                            <div class="metric-icon">
+                                                <i class="bi bi-graph-up-arrow"></i>
+                                            </div>
+                                            <div class="metric-value text-info">{{ msg.probability_presence }}</div>
+                                            <div class="metric-label">Risk Probability</div>
+                                        </div>
+                                        <div class="metric-content-bottom">
+                                            <div class="metric-description">
+                                                The specific statistical likelihood of having heart disease based on your input factors.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendations -->
+                <div class="recommendation-section">
+                    <h3 class="fw-bold text-primary mb-3">
+                        <i class="bi bi-lightbulb me-2"></i>Recommendations
+                    </h3>
+                    {% if msg.prediction == 'Presence' %}
+                        <div class="alert alert-danger border-0 rounded-3">
+                            <h5 class="alert-heading fw-bold">
+                                <i class="bi bi-exclamation-triangle me-2"></i>Important Next Steps
+                            </h5>
+                            <p class="mb-3">Based on your assessment, we recommend consulting with a healthcare professional for proper medical evaluation.</p>
+                            <ul class="mb-0">
+                                <li>Schedule an appointment with a cardiologist</li>
+                                <li>Consider additional diagnostic tests (ECG, stress test, etc.)</li>
+                                <li>Review your current medications with your doctor</li>
+                                <li>Discuss lifestyle modifications that may help</li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-success border-0 rounded-3">
+                            <h5 class="alert-heading fw-bold">
+                                <i class="bi bi-check-circle me-2"></i>Great Results!
+                            </h5>
+                            <p class="mb-3">Your assessment indicates a low risk of heart disease. Keep up the great work!</p>
+                            <ul class="mb-0">
+                                <li>Maintain regular physical activity</li>
+                                <li>Continue healthy eating habits</li>
+                                <li>Schedule regular health check-ups</li>
+                                <li>Monitor your blood pressure and cholesterol</li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="mt-4 p-3 bg-light rounded-3">
+                        <h6 class="fw-bold text-dark">
+                            <i class="bi bi-info-circle me-2"></i>Disclaimer
+                        </h6>
+                        <p class="small text-muted mb-0">
+                            This assessment is for informational purposes only and should not replace professional medical advice. 
+                            Always consult with qualified healthcare providers for medical decisions.
+                        </p>
+                    </div>
+                </div>
+
+            {% elif msg %}
+                <!-- Error Results -->
+                <div class="result-card result-error">
+                    <div class="text-center">
+                        <i class="bi bi-exclamation-triangle-fill result-icon text-danger"></i>
+                        <h2 class="fw-bold text-danger">Assessment Error</h2>
+                        <p class="lead">{{ msg }}</p>
+                    </div>
+                </div>
+            {% else %}
+                <!-- No Results -->
+                <div class="result-card">
+                    <div class="text-center">
+                        <i class="bi bi-question-circle result-icon text-muted"></i>
+                        <h2 class="fw-bold text-muted">No Assessment Data</h2>
+                        <p class="lead">Please complete the heart disease assessment first.</p>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="{{ url_for('find') }}" class="btn btn-custom">
+                    <i class="bi bi-arrow-clockwise me-2"></i>New Assessment
+                </a>
+                <a href="{{ url_for('profile') }}" class="btn btn-secondary-custom">
+                    <i class="bi bi-person me-2"></i>View History
+                </a>
+                <a href="{{ url_for('cardiac_info') }}" class="btn btn-secondary-custom">
+                    <i class="bi bi-info-circle me-2"></i>Learn More
+                </a>
+                <a href="{{ url_for('home') }}" class="btn btn-secondary-custom">
+                    <i class="bi bi-house me-2"></i>Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-adj mt-5">
+        <div class="container py-4">
+            <div class="row g-4 justify-content-center">
+                <!-- Column 1: Brand & Mission -->
+                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                    <!-- Logo and Brand -->
+                    <div class="d-flex align-items-center mb-3">
+                        <img
+                            src="{{ url_for('static', filename='Images/heartLogo.jpg') }}"
+                            alt="CardioInsight Logo"
+                            class="rounded-circle me-3 footer-logo"
+                        />
+                        <h5 class="fw-bold mb-0 text-white footer-brand-text">CardioInsight</h5>
+                    </div>
+                    <div class="footer-text">
+                        <p class="mb-2 text-white-75 small">
+                            Empowering heart health through AI-driven insights and guidance for a healthier life.
+                        </p>
+                        <p class="mb-0 fw-semibold text-white footer-copyright">© 2025 CardioInsight. All rights reserved.</p>
+                    </div>
+                </div>
+                
+                <!-- Column 2: Quick Links -->
+                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                    <h6 class="footer-title text-uppercase mb-3">Quick Links</h6>
+                    <ul class="footer-links">
+                        <li class="mb-1"><a href="{{ url_for('home') }}" class="footer-link">Home</a></li>
+                        <li class="mb-1"><a href="{{ url_for('cardiac_info') }}" class="footer-link">Cardiac Information</a></li>
+                        <li class="mb-1"><a href="{{ url_for('prevention') }}" class="footer-link">Prevention Tips</a></li>
+                        <li><a href="{{ url_for('statistics') }}" class="footer-link">Health Statistics</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Column 3: Health Resources -->
+                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                    <h6 class="footer-title text-uppercase mb-3">Health Resources</h6>
+                    <ul class="footer-links">
+                        <li class="mb-1"><a href="https://www.who.int/health-topics/cardiovascular-diseases" target="_blank" class="footer-link">WHO - Cardiovascular Diseases</a></li>
+                        <li class="mb-1"><a href="https://www.heart.org/" target="_blank" class="footer-link">American Heart Association</a></li>
+                        <li class="mb-1"><a href="https://www.cdc.gov/heartdisease/" target="_blank" class="footer-link">CDC - Heart Disease</a></li>
+                        <li><a href="https://www.acc.org/" target="_blank" class="footer-link">American College of Cardiology</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Column 4: Contact & Social -->
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="footer-title text-uppercase mb-3">Connect With Us</h6>
+                    <div class="contact-info mb-3">
+                        <div class="contact-item mb-2">
+                            <i class="bi bi-envelope me-2"></i>
+                            <a href="mailto:support@cardioinsight.com" class="footer-link">support@cardioinsight.com</a>
+                        </div>
+                        <div class="contact-item mb-3">
+                            <i class="bi bi-telephone me-2"></i>
+                            <span class="text-white">+880-1748829422</span>
+                        </div>
+                    </div>
+                    <!-- Social Links -->
+                    <div class="social-links">
+                        <span class="small text-white-50 mb-2 d-block">Follow Us:</span>
+                        <a href="#" class="social-link me-2" title="Facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="social-link me-2" title="Twitter"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="social-link me-2" title="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="social-link" title="Instagram"><i class="bi bi-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

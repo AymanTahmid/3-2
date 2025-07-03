@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login - CardioInsight</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='Images/favicon.png') }}"
+    />
+    <!-- Bootstrap 5 -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <!-- Custom CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='CSS/home.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='CSS/login.css') }}"
+    />
+  </head>
+  <body>
+    <!-- Floating Particles Background -->
+    <div class="floating-particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+
+    <!-- Toast Container -->
+    {% if msg %}
+    <div
+      aria-live="polite"
+      aria-atomic="true"
+      class="position-fixed top-0 start-50 translate-middle-x p-3"
+      style="z-index: 1080; min-width: 320px; max-width: 90vw;"
+    >
+      <div
+        id="mainToast"
+        class="toast shadow-lg border-0 rounded-3 {% if msg_type == 'success' %}text-bg-success{% elif msg_type == 'danger' %}text-bg-danger{% else %}text-bg-info{% endif %}"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        data-bs-delay="4000"
+        style="min-width: 320px; max-width: 500px; width: auto;"
+      >
+        <div class="toast-header">
+          <div class="me-2">
+            {% if msg_type == 'success' %}
+            <i class="bi bi-check-circle-fill text-success"></i>
+            {% elif msg_type == 'danger' %}
+            <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+            {% else %}
+            <i class="bi bi-info-circle-fill text-info"></i>
+            {% endif %}
+          </div>
+          <strong class="me-auto">
+            {% if msg_type == 'success' %}
+            Success
+            {% elif msg_type == 'danger' %}
+            Error
+            {% else %}
+            Info
+            {% endif %}
+          </strong>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="toast-body">
+          {{ msg }}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Main Container -->
+    <div class="min-vh-100 d-flex align-items-center justify-content-center py-5">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-xl-12 col-lg-12">
+            <div class="card shadow-2xl border-0 rounded-4 overflow-hidden" style="max-width: 1400px; margin: 0 auto;">
+              <div class="row g-0">
+                <!-- Left Side - Branding -->
+                <div class="col-lg-6 d-none d-lg-flex">
+                  <div class="login-hero-section w-100 d-flex align-items-center justify-content-center p-5">
+                    <div class="text-center text-white">
+                      <!-- Logo -->
+                      <div class="mb-4">
+                        <img
+                          src="{{ url_for('static', filename='Images/heartLogo.jpg') }}"
+                          alt="CardioInsight Logo"
+                          class="rounded-circle shadow-lg mb-3 logo-animated"
+                          style="width: 120px; height: 120px; object-fit: cover; border: 4px solid rgba(255,255,255,0.3);"
+                        />
+                      </div>
+                      <!-- Features -->
+                      <div class="mb-4">
+                        <h4 class="fw-bold mb-3" style="font-size: 1.5rem; letter-spacing: -0.025em;">
+                          Welcome to CardioInsight
+                        </h4>
+                        <p class="lead mb-4">Your journey to better heart health continues here.</p>
+                        <div class="text-start mx-auto" style="max-width: 300px;">
+                          <div class="mb-2">
+                            <i class="bi bi-heart-pulse me-2"></i>
+                            AI-powered heart risk assessment
+                          </div>
+                          <div class="mb-2">
+                            <i class="bi bi-shield-check me-2"></i>
+                            Secure and private health data
+                          </div>
+                          <div class="mb-2">
+                            <i class="bi bi-graph-up me-2"></i>
+                            Track your progress over time
+                          </div>
+                          <div class="mb-2">
+                            <i class="bi bi-book me-2"></i>
+                            Expert cardiac guidance
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right Side - Login Form -->
+                <div class="col-lg-6">
+                  <div class="p-5 login-form-section">
+                    <!-- Mobile Logo -->
+                    <div class="d-lg-none text-center mb-4">
+                      <img
+                        src="{{ url_for('static', filename='Images/heartLogo.jpg') }}"
+                        alt="CardioInsight Logo"
+                        class="rounded-circle shadow mb-3 logo-animated-mobile"
+                        style="width: 80px; height: 80px; object-fit: cover;"
+                      />
+                      <h3 class="text-gradient fw-bold">CardioInsight</h3>
+                    </div>
+
+                    <!-- Form Header -->
+                    <div class="text-center mb-4">
+                      <h3 class="fw-bold mb-2" style="color: #2c5364; font-size: 1.8rem; letter-spacing: -0.025em;">
+                        Login
+                      </h3>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form action="/login" method="POST" class="needs-validation" novalidate>
+                      <!-- Email Field -->
+                      <div class="mb-3">
+                        <label for="email" class="form-label fw-semibold">
+                          <i class="bi bi-envelope me-2"></i>Email Address
+                        </label>
+                        <input
+                          type="email"
+                          class="form-control form-control-lg rounded-3"
+                          id="email"
+                          name="em"
+                          placeholder="Enter your email address"
+                          required
+                          style="border: 2px solid #e3f2fd; background: rgba(255,255,255,0.9); padding: 16px 20px;"
+                          value="{{ request.form.get('em', '') }}"
+                          autocomplete="email"
+                        />
+                        <div class="invalid-feedback">
+                          Please enter a valid email address.
+                        </div>
+                      </div>
+
+                      <!-- Password Field -->
+                      <div class="mb-3">
+                        <label for="password" class="form-label fw-semibold">
+                          <i class="bi bi-lock me-2"></i>Password
+                        </label>
+                        <div class="position-relative">
+                          <input
+                            type="password"
+                            class="form-control form-control-lg rounded-3"
+                            id="password"
+                            name="pw"
+                            placeholder="Enter your password"
+                            required
+                            minlength="1"
+                            style="border: 2px solid #e3f2fd; background: rgba(255,255,255,0.9); padding: 16px 20px; padding-right: 60px;"
+                            autocomplete="current-password"
+                          />
+                          <button
+                            type="button"
+                            class="btn position-absolute end-0 top-0 h-100 px-3"
+                            id="togglePassword"
+                            style="border: none; background: none; color: #6c757d;"
+                            tabindex="-1"
+                          >
+                            <i class="bi bi-eye" id="eyeIcon"></i>
+                          </button>
+                        </div>
+                        <div class="invalid-feedback">
+                          Please enter your password.
+                        </div>
+                      </div>
+
+                      <!-- Remember Me & Forgot Password -->
+                      <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="rememberMe">
+                          <label class="form-check-label" for="rememberMe">
+                            Remember me
+                          </label>
+                        </div>
+                        <a href="{{ url_for('forgot') }}" class="text-decoration-none" style="color: #2c5364;">
+                          Forgot password?
+                        </a>
+                      </div>
+
+                      <!-- Login Button -->
+                      <button
+                        type="submit"
+                        id="loginButton"
+                        class="btn btn-lg w-100 rounded-3 fw-semibold mb-3"
+                        style="background: linear-gradient(135deg, #2c5364 0%, #0891b2 50%, #2dd4bf 100%); 
+                               color: white; 
+                               border: none; 
+                               padding: 14px 24px; 
+                               font-size: 1.1rem; 
+                               letter-spacing: 0.025em;
+                               box-shadow: 0 4px 15px rgba(44, 83, 100, 0.3);
+                               transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);"
+                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(44, 83, 100, 0.4)'"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(44, 83, 100, 0.3)'"
+                      >
+                        <span id="loginButtonText">
+                          <i class="bi bi-box-arrow-in-right me-2"></i>
+                          <span>Sign In to Dashboard</span>
+                        </span>
+                        <span id="loginLoadingText" style="display: none;">
+                          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                          <span>Signing In...</span>
+                        </span>
+                      </button>
+                    </form>
+
+                    <!-- Divider -->
+                    <div class="text-center mb-3">
+                      <span class="text-muted">Don't have an account?</span>
+                    </div>
+
+                    <!-- Sign Up Link -->
+                    <div class="text-center mb-3">
+                      <a
+                        href="{{ url_for('signup') }}"
+                        class="btn btn-outline-secondary btn-lg w-100 rounded-3 fw-semibold"
+                        style="border: 2px solid #2c5364; color: #2c5364;"
+                      >
+                        <i class="bi bi-person-plus me-2"></i>Create New Account
+                      </a>
+                    </div>
+
+                    <!-- Guest Access -->
+                    <div class="text-center">
+                      <div class="mb-3">
+                        <small class="text-muted d-block mb-1" style="font-size: 0.9rem;">
+                          <i class="bi bi-info-circle me-1"></i>
+                          Want to explore first?
+                        </small>
+                      </div>
+                      <a
+                        href="{{ url_for('home', guest=1) }}"
+                        class="btn btn-guest-access btn-lg w-100 rounded-3 fw-semibold"
+                        style="position: relative; z-index: 1;"
+                      >
+                        <i class="bi bi-person-circle me-2"></i>
+                        <span>Continue as Guest</span>
+                        <i class="bi bi-arrow-right ms-2"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var toastEl = document.getElementById("mainToast");
+        if (toastEl) {
+          var toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+          toast.show();
+        }
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const rememberMeCheckbox = document.getElementById('rememberMe');
+        const loginForm = document.querySelector('form');
+
+        function getAllSavedCredentials() {
+          const savedCredentials = localStorage.getItem('cardioInsightCredentials');
+          return savedCredentials ? JSON.parse(savedCredentials) : {};
+        }
+
+        function saveCredentials(email, password) {
+          const credentials = getAllSavedCredentials();
+          credentials[email] = password;
+          localStorage.setItem('cardioInsightCredentials', JSON.stringify(credentials));
+          localStorage.setItem('lastRememberedEmail', email);
+          localStorage.setItem('rememberMeEnabled', 'true');
+        }
+
+        function loadCredentialsForEmail(email) {
+          const credentials = getAllSavedCredentials();
+          return credentials[email] || '';
+        }
+
+        function removeCredentialsForEmail(email) {
+          const credentials = getAllSavedCredentials();
+          delete credentials[email];
+          localStorage.setItem('cardioInsightCredentials', JSON.stringify(credentials));
+        }
+
+        function clearAllCredentials() {
+          localStorage.removeItem('cardioInsightCredentials');
+          localStorage.removeItem('lastRememberedEmail');
+          localStorage.removeItem('rememberMeEnabled');
+        }
+
+        function clearLoginForm() {
+          emailInput.value = '';
+          passwordInput.value = '';
+          rememberMeCheckbox.checked = false;
+          emailInput.style.borderColor = '';
+          passwordInput.style.borderColor = '';
+          emailInput.classList.remove('auto-filled');
+          passwordInput.classList.remove('auto-filled');
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const isLoggedOut = urlParams.get('logout') === '1' || 
+                           sessionStorage.getItem('justLoggedOut') === 'true';
+
+        if (isLoggedOut) {
+          clearLoginForm();
+          sessionStorage.removeItem('justLoggedOut');
+          
+          // Let user know why form was cleared
+          const formHeader = document.querySelector('.text-center h3');
+          if (formHeader && urlParams.get('logout') === '1') {
+            const logoutNotice = document.createElement('small');
+            logoutNotice.className = 'text-muted d-block mt-2';
+            logoutNotice.style.fontSize = '0.85rem';
+            logoutNotice.innerHTML = '<i class="bi bi-info-circle me-1"></i>Form cleared for your security';
+            formHeader.parentNode.appendChild(logoutNotice);
+            
+            setTimeout(() => {
+              if (logoutNotice.parentNode) {
+                logoutNotice.remove();
+              }
+            }, 3000);
+          }
+          
+          if (urlParams.get('logout')) {
+            const newUrl = window.location.pathname;
+            window.history.replaceState({}, document.title, newUrl);
+          }
+        } else {
+          // Fill in saved login details if user had checked "Remember me"
+          const lastRememberedEmail = localStorage.getItem('lastRememberedEmail');
+          if (lastRememberedEmail && localStorage.getItem('rememberMeEnabled') === 'true') {
+            const savedPassword = loadCredentialsForEmail(lastRememberedEmail);
+            if (savedPassword) {
+              emailInput.value = lastRememberedEmail;
+              passwordInput.value = savedPassword;
+              rememberMeCheckbox.checked = true;
+            }
+          }
+        }
+
+        // Auto-fill password when email input changes
+        function handleEmailChange() {
+          const currentEmail = emailInput.value.trim();
+          if (currentEmail) {
+            const savedPassword = loadCredentialsForEmail(currentEmail);
+            if (savedPassword) {
+              passwordInput.value = savedPassword;
+              rememberMeCheckbox.checked = true;
+              
+              // Show green borders to indicate auto-fill worked
+              emailInput.style.borderColor = '#10b981';
+              passwordInput.style.borderColor = '#10b981';
+              emailInput.classList.add('auto-filled');
+              passwordInput.classList.add('auto-filled');
+              
+              const successMsg = document.createElement('small');
+              successMsg.className = 'text-success d-block mt-1';
+              successMsg.style.fontSize = '0.8rem';
+              successMsg.innerHTML = '<i class="bi bi-check-circle me-1"></i>Credentials auto-filled';
+              emailInput.parentNode.appendChild(successMsg);
+              
+              setTimeout(() => {
+                emailInput.style.borderColor = '';
+                passwordInput.style.borderColor = '';
+                emailInput.classList.remove('auto-filled');
+                passwordInput.classList.remove('auto-filled');
+                if (successMsg.parentNode) {
+                  successMsg.remove();
+                }
+              }, 2000);
+            } else {
+              passwordInput.value = '';
+              rememberMeCheckbox.checked = false;
+            }
+          }
+        }
+
+        emailInput.addEventListener('blur', handleEmailChange);
+        emailInput.addEventListener('input', function() {
+          // Wait a bit before checking to avoid too many searches
+          clearTimeout(this.searchTimeout);
+          this.searchTimeout = setTimeout(handleEmailChange, 300);
+        });
+        
+        emailInput.addEventListener('click', handleEmailChange);
+        emailInput.addEventListener('click', handleEmailChange);
+
+        loginForm.addEventListener('submit', function(e) {
+          const email = emailInput.value.trim();
+          const password = passwordInput.value;
+          
+          if (!loginForm.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+            loginForm.classList.add('was-validated');
+            
+            // Jump to the first field that has an issue
+            const firstInvalidField = loginForm.querySelector(':invalid');
+            if (firstInvalidField) {
+              firstInvalidField.focus();
+              firstInvalidField.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+              });
+            }
+            return;
+          }
+          
+          // Switch button to loading mode
+          const loginButton = document.getElementById('loginButton');
+          const buttonText = document.getElementById('loginButtonText');
+          const loadingText = document.getElementById('loginLoadingText');
+          
+          if (loginButton && buttonText && loadingText) {
+            loginButton.disabled = true;
+            buttonText.style.display = 'none';
+            loadingText.style.display = 'inline-block';
+            loginButton.style.cursor = 'not-allowed';
+            loginButton.style.opacity = '0.8';
+          }
+          
+          // Handle the "Remember me" checkbox
+          if (rememberMeCheckbox.checked && email && password) {
+            saveCredentials(email, password);
+          } else if (!rememberMeCheckbox.checked && email) {
+            removeCredentialsForEmail(email);
+            
+            if (localStorage.getItem('lastRememberedEmail') === email) {
+              localStorage.removeItem('lastRememberedEmail');
+              localStorage.removeItem('rememberMeEnabled');
+            }
+          }
+        });
+
+        // Handle remember me checkbox changes
+        rememberMeCheckbox.addEventListener('change', function() {
+          const currentEmail = emailInput.value.trim();
+          
+          if (!this.checked && currentEmail) {
+            // Remove credentials for current email when unchecked
+            removeCredentialsForEmail(currentEmail);
+            
+            // If this was the last remembered email, clear the flag
+            if (localStorage.getItem('lastRememberedEmail') === currentEmail) {
+              localStorage.removeItem('lastRememberedEmail');
+              localStorage.removeItem('rememberMeEnabled');
+            }
+          }
+        });
+
+        // Create email suggestions datalist
+        function createEmailSuggestions() {
+          const savedCredentials = getAllSavedCredentials();
+          const emailList = Object.keys(savedCredentials);
+          
+          if (emailList.length > 0) {
+            // Remove existing datalist
+            const existingDatalist = document.getElementById('emailSuggestions');
+            if (existingDatalist) {
+              existingDatalist.remove();
+            }
+            
+            // Create new datalist
+            const datalist = document.createElement('datalist');
+            datalist.id = 'emailSuggestions';
+            
+            emailList.forEach(email => {
+              const option = document.createElement('option');
+              option.value = email;
+              option.textContent = email;
+              datalist.appendChild(option);
+            });
+            
+            document.body.appendChild(datalist);
+            emailInput.setAttribute('list', 'emailSuggestions');
+            
+            // Add title attribute for better UX
+            emailInput.setAttribute('title', 'Type or select a previously used email');
+          }
+        }
+
+        // Initialize email suggestions on page load (if not logged out)
+        if (!isLoggedOut) {
+          createEmailSuggestions();
+        }
+
+        // Listen for storage changes from other tabs
+        window.addEventListener('storage', function(e) {
+          if (e.key === 'justLoggedOut' && e.newValue === 'true') {
+            clearLoginForm();
+          }
+        });
+      });
+
+      // Password toggle
+      document.getElementById('togglePassword').addEventListener('click', function() {
+        const password = document.getElementById('password');
+        const eyeIcon = document.getElementById('eyeIcon');
+        
+        if (password.type === 'password') {
+          password.type = 'text';
+          eyeIcon.classList.remove('bi-eye');
+          eyeIcon.classList.add('bi-eye-slash');
+        } else {
+          password.type = 'password';
+          eyeIcon.classList.remove('bi-eye-slash');
+          eyeIcon.classList.add('bi-eye');
+        }
+      });
+
+      // Form validation (enhanced) - Only for forms that don't have custom handlers
+      (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+          // Skip the login form since it has its own validation handler
+          var forms = document.querySelectorAll('.needs-validation:not([action="/login"])');
+          
+          forms.forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+              if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+                
+                // Find the first invalid field and focus it
+                var firstInvalidField = form.querySelector(':invalid');
+                if (firstInvalidField) {
+                  firstInvalidField.focus();
+                  firstInvalidField.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                  });
+                }
+              }
+              form.classList.add('was-validated');
+            }, false);
+          });
+          
+          // Add real-time validation feedback for all forms
+          var inputs = document.querySelectorAll('.needs-validation input[required]');
+          inputs.forEach(function(input) {
+            var hasAttemptedSubmit = false;
+            
+            // Only show validation after form submission attempt or after user has started typing and left the field
+            input.addEventListener('blur', function() {
+              var form = this.closest('form');
+              var formWasValidated = form.classList.contains('was-validated');
+              
+              // Only apply validation styling if form was already validated or user has interacted significantly
+              if (formWasValidated || (this.value.length > 0 && hasAttemptedSubmit)) {
+                if (this.checkValidity()) {
+                  this.classList.remove('is-invalid');
+                  this.classList.add('is-valid');
+                } else {
+                  this.classList.remove('is-valid');
+                  this.classList.add('is-invalid');
+                }
+              }
+            });
+            
+            input.addEventListener('input', function() {
+              var form = this.closest('form');
+              var formWasValidated = form.classList.contains('was-validated');
+              
+              // Mark that user has started interacting
+              if (this.value.length > 0) {
+                hasAttemptedSubmit = true;
+              }
+              
+              // Only update validation if form was already validated
+              if (formWasValidated) {
+                if (this.checkValidity()) {
+                  this.classList.remove('is-invalid');
+                  this.classList.add('is-valid');
+                } else {
+                  this.classList.remove('is-valid');
+                  this.classList.add('is-invalid');
+                }
+              }
+            });
+            
+            // Clear validation styling when input is cleared
+            input.addEventListener('focus', function() {
+              var form = this.closest('form');
+              if (!form.classList.contains('was-validated')) {
+                this.classList.remove('is-valid', 'is-invalid');
+              }
+            });
+          });
+        }, false);
+      })();
+    </script>
+  </body>
+</html>
