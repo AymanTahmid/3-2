@@ -81,10 +81,9 @@ pip install -r requirements.txt
 
 ### 5. Configure Environment
 
-- **MongoDB:**  
-  Ensure MongoDB is running locally (default: `mongodb://localhost:27017/`).  
-  [Download MongoDB Community Server](https://www.mongodb.com/try/download/community) if needed.
-
+**Install & Start MongoDB:**
+- Download [MongoDB Compass Software](https://www.mongodb.com/try/download/compass)
+  ```
 - **Email Credentials:**  
   Update the email and password in `app.py` for Flask-Mail:
   ```python
